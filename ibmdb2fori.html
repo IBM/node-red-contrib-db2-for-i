@@ -56,7 +56,7 @@
 <script type="text/javascript">
     RED.nodes.registerType('ibmdb2fori',{
         category: 'storage-input',
-        color:"#099B05",
+        color:"rgb(115, 185, 221)",
         defaults: {
             mydb: {type:"ibmdb2fori",required:true},
             name: {value:""}
@@ -65,8 +65,7 @@
         outputs:2,
         icon: "db.png",
         label: function() {
-            var levelNode = RED.nodes.node(this.mydb);
-            return this.name||(levelNode?levelNode.label():"ibmdb2fori");
+            return this.name ||"DB2 for i";
         },
             labelStyle: function() {
             return this.name?"node_label_italic":"";

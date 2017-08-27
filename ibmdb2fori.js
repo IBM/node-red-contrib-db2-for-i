@@ -100,8 +100,8 @@ module.exports = function(RED) {
 
         node.query = function(node, db, msg){
             if ( msg.payload !== null && typeof msg.payload === 'string' && msg.payload !== '') {
-                
-                 var sqlB = new db.dbstmt(dbconn2);
+                console.log("query: "+ msg.payload);
+                 var sqlB = new db.dbstmt(dbconn);
                 sqlB.exec(msg.payload, function(err, rows) {
                     if (err) { 
                         console.log("QUERY ERROR "+ err);

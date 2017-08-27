@@ -1,0 +1,80 @@
+<script type="text/x-red" data-template-name="ibm-db2-for-i">
+    <div class="form-row">
+        <label for="node-config-input-host"><i class="fa fa-globe"></i> Host</label>
+        <input type="text" id="node-config-input-host">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-port"><i class="fa fa-random"></i> Port</label>
+        <input type="text" id="node-config-input-port">
+    </div>
+        <div class="form-row">
+        <label for="node-config-input-user"><i class="fa fa-user"></i> User</label>
+        <input type="text" id="node-config-input-user">
+    </div>
+        <div class="form-row">
+        <label for="node-config-input-pass"><i class="fa fa-lock"></i> Password</label>
+        <input type="password" id="node-config-input-password">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-db"><i class="fa fa-database"></i> Database</label>
+        <input type="text" id="node-config-input-db">
+    </div>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('ibm-db2-for-i',{
+        category: 'config',
+        defaults: {
+            host: {value:"127.0.0.1",required:true},
+            port: {value:"3306",required:true},
+            db: {value:"",required:true},
+        },
+        credentials: {
+            user: {type: "text"},
+            password: {type: "password"}
+        },
+        label: function() {
+            return this.db;
+        }
+    });
+</script>
+
+
+<script type="text/x-red" data-template-name="ibm-db2">
+    <div class="form-row">
+        <label for="node-input-mydb"><i class="fa fa-database"></i> Database</label>
+        <input type="text" id="node-input-mydb">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="ibm-db2">
+    <p>Allows basic access to a IBM DB2 for i database.</p>
+     <p><code>msg.payload</code> must hold the <i>query</i> for the database, and the result is returned in <code>msg.payload</code>.</p>
+    <p>Typically the returned payload will be an array of the result rows.</p>
+    <p>If nothing is found for the key then <i>null</i> is returned,</p>
+    </script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('ibm-db2-for-i',{
+        category: 'storage-input',
+        color:"#099B05",
+        defaults: {
+            mydb: {type:"ibm-db2-for-i",required:true},
+            name: {value:""}
+        },
+        inputs:1,
+        outputs:2,
+        icon: "./icon/db2fori.jpg",
+        label: function() {
+            var levelNode = RED.nodes.node(this.mydb);
+            return this.name||(levelNode?levelNode.label():"ibm-db2-for-i");
+        },
+            labelStyle: function() {
+            return this.name?"node_label_italic":"";
+        }
+    });
+</script>

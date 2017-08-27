@@ -17,7 +17,7 @@
     "name": "Benoit Marolleau"
   },
   "license": "Apache-2.0",
-  "homepage": "https://git.ng.bluemix.net/benoit.marolleau/node-red-constrib-db2-for-i.git",
+  "homepage": "https://git.ng.bluemix.net/benoit.marolleau/node-red-contrib-db2-for-i.git",
   "node-red": {
     "nodes": {
       "db2fori": "ibmdb2fori.js"
@@ -31,10 +31,10 @@
   "main": "ibmdb2fori.js",
   "repository": {
     "type": "git",
-    "url": "git+https://git.ng.bluemix.net/benoit.marolleau/node-red-constrib-db2-for-i.git"
+    "url": "git+https://git.ng.bluemix.net/benoit.marolleau/node-red-contrib-db2-for-i.git"
   },
   "bugs": {
-    "url": "https://git.ng.bluemix.net/benoit.marolleau/node-red-constrib-db2-for-i.git/issues"
+    "url": "https://git.ng.bluemix.net/benoit.marolleau/node-red-contrib-db2-for-i.git/issues"
   },
   "maintainers": [
     {

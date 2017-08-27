@@ -1,13 +1,12 @@
-
 module.exports = function(RED) {    
-    "use strict";
+    //"use strict";
     var reconnect = 30000;
     //var db2 = require('ibm_db');
     var Promise = require('promise');
     var db = require('/QOpenSys/QIBM/ProdData/OPS/Node6/os400/db2i/lib/db2a');
     
 
-    function ibm-db2-for-i-Node(n) {
+    function ibmdb2foriNode(n) {
         RED.nodes.createNode(this,n);
         this.host = n.host;
         this.connected = false;
@@ -86,14 +85,14 @@ module.exports = function(RED) {
         });
     }
     
-    RED.nodes.registerType("ibm-db2fori-db", ibm-db2-for-i-Node, {
+    RED.nodes.registerType("ibmdb2foridb", ibmdb2foriNode, {
         credentials: {
             user: {type: "text"},
             password: {type: "password"}
         }
     });
     
-    function ibm-db2-for-i-NodeIn(n) {
+    function ibmdb2foriNodeIn(n) {
    
         RED.nodes.createNode(this,n);
         this.mydb = n.mydb;
@@ -174,5 +173,5 @@ module.exports = function(RED) {
             }
         });
     }
-    RED.nodes.registerType("ibmdb2-for-i", ibm-db2-for-i-NodeIn);
+    RED.nodes.registerType("ibmdb2fori", ibmdb2foriNodeIn);
 }

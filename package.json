@@ -11,7 +11,9 @@
     "db2",
     "ibm",
    "ibmi",
-   "os400"
+   "os400",
+   "ibm i",
+   "iseries"
 ],
 "author": {
     "name": "Benoit Marolleau"

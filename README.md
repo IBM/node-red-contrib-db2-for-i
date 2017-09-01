@@ -20,11 +20,25 @@ Usage
 
 Allows basic access to a DB2 for i database.
 
-The `msg.database` must hold the <i>database</i>
+msg.payload must hold the query for the database, and the result is returned in msg.payload.
 
-The `msg.topic` must hold the <i>query</i>
+Typically the returned payload will be an array of the result rows.
 
-and the result is returned in `msg.payload`.
+If nothing is found for the key then null is returned.
+
+Basic Example [here](https://flows.nodered.org/flow/b255f32b8e07a5cc0c17e654fd338354) 
+
+
+Usage Details and Example
+--------
+
+Input:   msg.payload  = SQL Query injected
+
+Input: The msg.database payload for injecting the db name (ex: *LOCAL). Note: The  associated Template node name is used as a connection name for connection reuse within a Node-RED flow. This node name is used as a connection name.
+
+Input : Enter your credentials in the DB2 for i config node associated with the DB2 for i node : dbname = *LOCAL ,  and user profile and password (should be optional in the next release)
+
+Output Result in msg.payload. Not return code for now...
 
 The returned payload will be an array of the result rows.
 

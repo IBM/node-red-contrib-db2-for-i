@@ -46,6 +46,12 @@
      <p><code>msg.payload</code> must hold the <i>query</i> for the database, and the result is returned in <code>msg.payload</code>.</p>
     <p>Typically the returned payload will be an array of the result rows.</p>
     <p>If nothing is found for the key then <i>null</i> is returned,</p>
+    <li>Basic Example here :   <a href="https://flows.nodered.org/flow/b255f32b8e07a5cc0c17e654fd338354">here</a>  </li>
+    <p> <ul><li> Input:   msg.payload  = SQL Query injected </li>
+
+<li> Input: The msg.database payload for injecting the db name (ex: *LOCAL). Note: The  associated Template node name is used as a connection name for connection reuse within a Node-RED flow. This node name is used as a connection name.</li>
+<li>Input : Enter your credentials in the DB2 for i config node associated with the DB2 for i node : dbname = *LOCAL ,  and user profile and password (should be optional in the next release)</li>
+<li>Output Result in msg.payload. Not return code for now...</li></p>
     </script>
 
 <script type="text/javascript">

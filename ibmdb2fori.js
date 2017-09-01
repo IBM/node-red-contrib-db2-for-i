@@ -100,8 +100,8 @@
                     sqlB.exec(msg.payload, function(rows) {
                             
                             rows.forEach(function(row) {
-                                node.send({ topic: msg.topic, payload: row });
-                              
+                                node.send({ topic: msg.topic, payload: row } );
+                                //console.log("input msg received:"+ msg.database);
                             })
                             node.send([ null, { topic: msg.topic, control: 'end' }]);
                         

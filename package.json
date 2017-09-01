@@ -3,6 +3,7 @@
   "version": "0.0.2",
   "description": "A Node-RED node to use a IBM DB2 for i database",
   "dependencies": {
+       "promise": "7.0.3"
   },
   "devDependencies": {},
   "directories": {},
@@ -41,8 +42,9 @@
   "maintainers": [
     {
       "name": "BENOIT MAROLLEAU",
-      "email": "benoit.marolleau@fr.ibm.com"
+  "email": "benoit.marolleau@fr.ibm.com"
     }
   ]
 }
+
 

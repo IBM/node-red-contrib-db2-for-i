@@ -1,4 +1,4 @@
-<script type="text/x-red" data-template-name="Db2 for i Config">
+<script type="text/x-red" data-template-name="DB2 for i Config">
     <div class="form-row">
         <label for="node-config-input-user"><i class="fa fa-user"></i> User</label>
         <input type="text" id="node-config-input-user">
@@ -14,7 +14,7 @@
 </script>
 
 <script type="text/javascript">
-    RED.nodes.registerType('Db2 for i Config',{
+    RED.nodes.registerType('DB2 for i Config',{
         category: 'config',
         defaults: {
             db: {value:"*LOCAL",required:true}
@@ -30,7 +30,7 @@
 </script>
 
 
-<script type="text/x-red" data-template-name="Db2 for i">
+<script type="text/x-red" data-template-name="DB2 for i">
     <div class="form-row">
         <label for="node-input-mydb"><i class="fa fa-database"></i> Database</label>
         <input type="text" id="node-input-mydb">
@@ -46,7 +46,7 @@
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="Db2 for i">
+<script type="text/x-red" data-help-name="DB2 for i">
     <p>Allows basic access to a IBM Db2 for i database. SQL SELECT, INSERT, UPDATE, DELETE.</p>
      <p><code>msg.payload</code> must hold the <i>query</i> for the database, and the result is returned in <code>msg.payload</code>.</p>
     <p>Typically the returned payload is one row per result message (Default). Useful for processing per row.</p>
@@ -57,15 +57,15 @@
 
 <li> Input: The msg.database payload for injecting the db name (ex: *LOCAL). Note: The  associated Template node name is used as a connection name for connection reuse within a Node-RED flow. This node name is used as a connection name.</li>
 <li> Input : Enter your credentials in the Db2 for i config node associated with the Db2 for i node : dbname = *LOCAL ,  and user profile and password (should be optional in the next release)</li>
-<li>Output Result in msg.payload. No return code for now...</li></p>
+<li>Output Result in msg.payload. One message / JSON Array (array mode) containing N objects (rows) or N message / JSON object per row. No DB2 return code for now...</li></p>
     </script>
 
 <script type="text/javascript">
-    RED.nodes.registerType('Db2 for i',{
+    RED.nodes.registerType('DB2 for i',{
         category: 'storage-input',
         color:"rgb(115, 185, 221)",
         defaults: {
-            mydb: {type:"Db2 for i Config",required:true},
+            mydb: {type:"DB2 for i Config",required:true},
             name: {value:""},
             arraymode: {value: false},
         },
@@ -73,7 +73,7 @@
         outputs:1,
         icon: "db2fori.png",
         label: function() {
-            return this.name ||"Db2 for i";
+            return this.name ||"DB2 for i";
         },
             labelStyle: function() {
             return this.name?"node_label_italic":"";

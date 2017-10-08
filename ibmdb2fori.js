@@ -74,7 +74,7 @@
             });
         }
 
-        RED.nodes.registerType("Db2 for i Config", ibmdb2foriNode, {
+        RED.nodes.registerType("DB2 for i Config", ibmdb2foriNode, {
             credentials: {
                 user: {type: "text"},
                 password: {type: "password"}
@@ -178,5 +178,5 @@
                 }
             });
         }
-        RED.nodes.registerType("Db2 for i", ibmdb2foriNodeIn);
+        RED.nodes.registerType("DB2 for i", ibmdb2foriNodeIn);
     }

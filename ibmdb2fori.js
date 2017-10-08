@@ -2,7 +2,7 @@
         //"use strict"; 
         
         var Promise = require('promise');
-        // Requires DB2 driver - non blocking version : Node-RED flow has to run locally on IBM i
+        // Requires native DB2 driver - non blocking version : Node-RED flow has to run locally on IBM i, for now. JDBC/ODBC driver use to come.
         // Hardcoded path..todo: make it more flexible
         var db = require('/QOpenSys/QIBM/ProdData/OPS/Node6/os400/db2i/lib/db2a');
         
@@ -74,7 +74,7 @@
             });
         }
 
-        RED.nodes.registerType("DB2 for i Config", ibmdb2foriNode, {
+        RED.nodes.registerType("Db2 for i Config", ibmdb2foriNode, {
             credentials: {
                 user: {type: "text"},
                 password: {type: "password"}
@@ -85,6 +85,8 @@
 
             RED.nodes.createNode(this,n);
             this.mydb = n.mydb;
+            this.arraymode = n.arraymode;
+            
             var node = this;
             
             
@@ -98,12 +100,20 @@
                      var sqlB = new db.dbstmt(db2.dbconn);
                     
                     sqlB.exec(msg.payload, function(rows) {
-                            
+                          
+                    if (!node.arraymode)
+                        {   
                             rows.forEach(function(row) {
                                 node.send({ topic: msg.topic, payload: row } );
                                 //console.log("input msg received:"+ msg.database);
                             })
-                            node.send([ null, { topic: msg.topic, control: 'end' }]);
+                        }
+                        else
+                        {
+                           node.send({ topic: msg.topic, payload: rows } );     
+                        }
+                            
+                        node.send([ null, { topic: msg.topic, control: 'end' }]);
                         
                     });
                     delete sqlB;
@@ -168,5 +178,5 @@
                 }
             });
         }
-        RED.nodes.registerType("DB2 for i", ibmdb2foriNodeIn);
+        RED.nodes.registerType("Db2 for i", ibmdb2foriNodeIn);
     }

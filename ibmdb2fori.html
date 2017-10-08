@@ -1,4 +1,4 @@
-<script type="text/x-red" data-template-name="DB2 for i Config">
+<script type="text/x-red" data-template-name="Db2 for i Config">
     <div class="form-row">
         <label for="node-config-input-user"><i class="fa fa-user"></i> User</label>
         <input type="text" id="node-config-input-user">
@@ -14,7 +14,7 @@
 </script>
 
 <script type="text/javascript">
-    RED.nodes.registerType('DB2 for i Config',{
+    RED.nodes.registerType('Db2 for i Config',{
         category: 'config',
         defaults: {
             db: {value:"*LOCAL",required:true}
@@ -30,7 +30,7 @@
 </script>
 
 
-<script type="text/x-red" data-template-name="DB2 for i">
+<script type="text/x-red" data-template-name="Db2 for i">
     <div class="form-row">
         <label for="node-input-mydb"><i class="fa fa-database"></i> Database</label>
         <input type="text" id="node-input-mydb">
@@ -39,34 +39,41 @@
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
+    <div class="form-row">
+        <label style="width:80px"> </label>
+        <input type="checkbox" id="node-input-arraymode" style="display:inline-block; width:20px; vertical-align:baseline;">
+        <label for="node-input-arraymode" style="width:200px"><i class="fa fa-tag"></i> Single Array Result mode</label>
+    </div>
 </script>
 
-<script type="text/x-red" data-help-name="DB2 for i">
-    <p>Allows basic access to a IBM DB2 for i database.</p>
+<script type="text/x-red" data-help-name="Db2 for i">
+    <p>Allows basic access to a IBM Db2 for i database. SQL SELECT, INSERT, UPDATE, DELETE.</p>
      <p><code>msg.payload</code> must hold the <i>query</i> for the database, and the result is returned in <code>msg.payload</code>.</p>
-    <p>Typically the returned payload will be an array of the result rows.</p>
-    <p>If nothing is found for the key then <i>null</i> is returned,</p>
+    <p>Typically the returned payload is one row per result message (Default). Useful for processing per row.</p>
+    <p> NEW: Single Array Mode : result payload is an array containing all the result rows. Useful for processing all the rows.</p> 
+    <p>If nothing is found then <i>null</i> is returned. </p>
     <li>Basic Example here :   <a href="https://flows.nodered.org/flow/b255f32b8e07a5cc0c17e654fd338354">here</a>  </li>
     <p> <ul><li> Input:   msg.payload  = SQL Query injected </li>
 
 <li> Input: The msg.database payload for injecting the db name (ex: *LOCAL). Note: The  associated Template node name is used as a connection name for connection reuse within a Node-RED flow. This node name is used as a connection name.</li>
-<li>Input : Enter your credentials in the DB2 for i config node associated with the DB2 for i node : dbname = *LOCAL ,  and user profile and password (should be optional in the next release)</li>
-<li>Output Result in msg.payload. Not return code for now...</li></p>
+<li> Input : Enter your credentials in the Db2 for i config node associated with the Db2 for i node : dbname = *LOCAL ,  and user profile and password (should be optional in the next release)</li>
+<li>Output Result in msg.payload. No return code for now...</li></p>
     </script>
 
 <script type="text/javascript">
-    RED.nodes.registerType('DB2 for i',{
+    RED.nodes.registerType('Db2 for i',{
         category: 'storage-input',
         color:"rgb(115, 185, 221)",
         defaults: {
-            mydb: {type:"DB2 for i Config",required:true},
-            name: {value:""}
+            mydb: {type:"Db2 for i Config",required:true},
+            name: {value:""},
+            arraymode: {value: false},
         },
         inputs:1,
         outputs:1,
         icon: "db2fori.png",
         label: function() {
-            return this.name ||"DB2 for i";
+            return this.name ||"Db2 for i";
         },
             labelStyle: function() {
             return this.name?"node_label_italic":"";

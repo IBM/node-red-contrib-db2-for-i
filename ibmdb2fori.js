@@ -11,9 +11,12 @@
             RED.nodes.createNode(this,n);
             this.connected = false;
             this.connecting = false;
-            
+            this.cnnname=n.cnnname;           
             this.dbname = n.db;
+            this.dbconn=n.dbconn;
             var node = this;
+            
+            
             
             function doConnect(conncb) {
                 node.connecting = true;
@@ -23,8 +26,17 @@
                 this.dbconn = new db.dbconn();
                 node.connection = {
                     connect: (cb) => {
-                      // Connection to the DB. will be reused by other nodes if needed 
-                      this.dbconn.conn(node.dbname, node.credentials.user, node.credentials.password);  
+                        
+                         // Connection to the DB. will be reused by other nodes if needed 
+                      if ( (node.credentials.user == null  &&  node.credentials.password == null) || (node.credentials.user == ''  &&  node.credentials.password == '')  )
+                           {
+                             this.dbconn.conn(node.dbname);
+                             console.log("No user/password specified: Connecting with current user profile" );  
+                           }
+                        else{
+                            this.dbconn.conn(node.dbname, node.credentials.user, node.credentials.password);  
+                        }
+                        
                       cb(null, this.dbconn);    
                     },
                     end: (conn) => {
@@ -86,7 +98,6 @@
             RED.nodes.createNode(this,n);
             this.mydb = n.mydb;
             this.arraymode = n.arraymode;
-            
             var node = this;
             
             
@@ -96,8 +107,7 @@
                 
                 if ( msg.payload !== null && typeof msg.payload === 'string' && msg.payload !== '') {
                     
-                    
-                     var sqlB = new db.dbstmt(db2.dbconn);
+                    var sqlB = new db.dbstmt(db2.dbconn);
                     
                     sqlB.exec(msg.payload, function(rows) {
                           
@@ -134,29 +144,53 @@
             }
 
             node.on("input", (msg) => {
-
-                //console.log("input msg received:"+ msg.database);
-                if ( msg.database !== null && typeof msg.database === 'string' && msg.database !== '') {
-                    node.mydbNode = RED.nodes.getNode(n.mydb);
+                
+                if ( msg.database == null ) {
+                     // Simple mode - when you don't specify a connection name dynamically in msg.database - use the one in the Db2 for i config node attached.
+                    msg.database ="simple-mode";          
+                 }
+                
+                node.mydbNode = RED.nodes.getNode(n.mydb);
                     
                     //if a node config already there
                     if (node.mydbNode) {
-                        node.send([ null, { control: 'start', query: msg.payload, database: n.mydb } ]);
+                        
+                       node.send([ null, { control: 'start', query: msg.payload, database: n.mydb } ]);
                         // if a connection already exists to this particular "database". for connection reuse. not pooling yet :)
-                        if(node.mydbNode.dbconn && node.mydbNode.dbname === msg.database){
-                            console.log("already connected");
-                            node.query(node, node.mydbNode, msg);
+                        
+                      var findNode;
+                      RED.nodes.eachNode((node)=>{
+                                
+                       if(node.cnnname && node.cnnname === msg.database){
+                                      findNode = RED.nodes.getNode(node.id);
+                                      node.mydb = node.id;
+                                      console.log("Connection name specified in msg.database. Connection using Db2 Config node : "+ node.cnnname);
+                                }
+                            })
+                      
+                        if (findNode == null && msg.database!=null && msg.database !="simple-mode")
+                                {
+                                    console.log("msg.database is not matching any Connection Name in a DB2 for i config node");  
+                                    this.error("msg.database is not matching any Connection Name in a Db2 for i config node");
+                                    this.status({fill:"red",shape:"ring",text:"disconnected"});
+                                }
+                        else
+                            {
+                        if (findNode == null)
+                                { 
+                                  findNode = RED.nodes.getNode(n.mydb);
+                                    console.log("Simple Mode. Connection using Db2 Config node : "+ findNode.cnnname );
+                                }
+                                                
+                        
+                        if( findNode.dbconn && ( findNode.cnnname === msg.database || msg.database =="simple-mode")) {
+                            console.log("Already connected to DB2 for i with this connection");
+                            node.query(node, findNode, msg);
                         }
                         // if a connection - or config node - to this particular does not exist: get the appropriate config node & Get a connection with connect() 
                         // if a config node does not exist for this system and database, fails.
                         else{
-                            var findNode;
-                            RED.nodes.eachNode((node)=>{
-                                if(node.db && node.db === msg.database){
-                                      findNode = RED.nodes.getNode(node.id);
-                                      node.mydb = node.id;
-                                }
-                            })
+                            console.log("connection!");   
                             //we found the config node whose dbname equals the injected input msg.database payload. let's connect for the first time, we'll reuse it. 
                             findNode.connect()
                             .then(()=>{
@@ -164,18 +198,15 @@
                                 // we are connected, let's query our database using the DB2 API exec() 
                                 node.query(node, findNode, msg);
                             });
-                        }
+                        } 
+                            }
+                        
                     }
                     else {
                         this.error("database not configured");
                         this.status({fill:"red",shape:"ring",text:"disconnected"});
                     }
-                }
-                else{
-                    this.error("database not specified");
-                    this.status({fill:"red",shape:"ring",text:"disconnected"});
-                    
-                }
+          
             });
         }
         RED.nodes.registerType("DB2 for i", ibmdb2foriNodeIn);

@@ -1,6 +1,6 @@
 # node-red-contrib-db2-for-i
 
-A <a href="http://nodered.org" target="_new">Node-RED</a> node to read and write to a Db2 for IBM i database from IBM i.
+A <a href="http://nodered.org" target="_new">Node-RED</a> node to read and write to a Db2 for i database from Node-RED on IBM i.
 
 Install
 -------
@@ -22,34 +22,36 @@ Allows basic access to a Db2 for i database. Supported queries: SQL SELECT, INSE
 
 msg.payload must hold the query for the database, and the result is returned in msg.payload.
 
-Typically the returned payload is one row per result message (Default). Useful for processing per row.
+The returned payload is one row per result message (Default). Useful for processing per row.
 
 NEW -  A more standard "Single Array Mode":  result payload is an array containing all the result rows. Useful for bulk processing.
 
 If nothing is found then null is returned.
 
-Basic Example [here](https://flows.nodered.org/flow/b255f32b8e07a5cc0c17e654fd338354) 
+Basic Example [here](https://flows.nodered.org/flow/b255f32b8e07a5cc0c17e654fd338354)  or [here](https://flows.nodered.org) - "db2" search to get an up to date example
 
 
 Usage Details and Example
 --------
 
-Input:   msg.payload  = SQL Query injected
+Input:   msg.payload  = SQL Query injected (SELECT, INSERT, UPDATE, DELETE)
 
-Input: The msg.database payload for injecting the db name (ex: *LOCAL). Note: The  associated Template node name is used as a connection name for connection reuse within a Node-RED flow. This node name is used as a connection name.
+Input (OPTIONAL since v0.0.8): The msg.database payload for injecting the connection name (ex: Connection1) which has to exist as a DB2 for i config node. 
+The  associated DB2 config node name is used as a connection name for connection reuse within a Node-RED flow. 
+Useful for dynamic connection selection (Named Connection Pool like) 
 
-Input : Enter your credentials in the DB2 for i config node associated with the DB2 for i node : dbname = *LOCAL ,  and user profile and password (should be optional in a next release)
+Db2 Config Node:  Enter the connection name (ex Connection1), database name(ex dbname = *LOCAL), optional (since version 0.0.8):  your credentials (user profile and password). If no user password specified, use the current user profile.
 
-Output Result in msg.payload. Not return code for now...
+Output Result in msg.payload. 
 
 The returned payload will be an array (JSON Array) containing the result rows (array mode) or one message payload (JSON object) per row (default mode).
 
 If nothing is found then <i>null</i> is returned.
 
-
+ 
 Getting Started
 --------
 
-Refer to the flow [here](https://flows.nodered.org/flow/b255f32b8e07a5cc0c17e654fd338354) 
+Refer to the flow [here](https://flows.nodered.org/flow/b255f32b8e07a5cc0c17e654fd338354)  or [here](https://flows.nodered.org) - "db2" search to get an up to date example
     
 

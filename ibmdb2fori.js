@@ -114,13 +114,18 @@
                     if (!node.arraymode)
                         {   
                             rows.forEach(function(row) {
-                                node.send({ topic: msg.topic, payload: row } );
-                                //console.log("input msg received:"+ msg.database);
+                                
+                                msg.payload=row;
+                                node.send(msg);
+                                // bug - erase msg content corrected 0.0.9 - node.send({ topic: msg.topic, payload: row } );
+                                
                             })
                         }
                         else
                         {
-                           node.send({ topic: msg.topic, payload: rows } );     
+                            msg.payload=rows;
+                            node.send(msg);
+                           //node.send({topic: msg.topic, payload: rows } );     
                         }
                             
                         node.send([ null, { topic: msg.topic, control: 'end' }]);

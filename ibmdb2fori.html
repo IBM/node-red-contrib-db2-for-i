@@ -1,5 +1,5 @@
 <script type="text/x-red" data-template-name="DB2 for i Config">
-     <div class="form-row">
+    <div class="form-row">
         <label  for="node-config-input-cnnname" style="width:150px" ><i class="fa fa-tag"></i> Connection Name</label>
         <input type="text" id="node-config-input-cnnname"  placeholder="Connection Name">
     </div>
@@ -15,7 +15,11 @@
         <label for="node-config-input-db"><i class="fa fa-database"></i> Database</label>
         <input type="text" id="node-config-input-db">
     </div>
-      
+    <div class="form-row">
+        <label for="node-config-input-keepalive"><i class="fa fa-keepalive"></i> Keep-Alive</label>
+        <input type="checkbox" id="node-config-input-keepalive" style="display:inline-block; width:20px; vertical-align:baseline;">
+    </div>
+  
 </script>
 
 <script type="text/javascript">
@@ -23,8 +27,8 @@
         category: 'config',
         defaults: {
            cnnname: {value:"", required:true},
-            db: {value:"*LOCAL",required:true}
-           
+           db: {value:"*LOCAL",required:true},
+           keepalive:{value: true}
         },
         credentials: {
             user: {type: "text"},
@@ -67,6 +71,7 @@
 <li> Optional Input: <code>msg.database</code> payload for injecting the db connection name (ex: Connection1) which has to exist as a DB2 for i config node. This connection name has to be : The  associated DB2 config node name is used as a connection name for connection reuse within a Node-RED flow. Useful for dynamic connection selection (Named Connection Pool like) </li>
 <li> DB2 for i Config Node Input : Enter your credentials. Example:  dbname = *LOCAL ,  Optional : user profile and password if different from current profile</li>
 <li>Output: Result in <code>msg.payload</code>. One message / JSON Array (array mode) containing N objects (rows) or N message / JSON object per row. No DB2 return code for now...</li></p>
+ <p> Keep-Alive mode: keep the DB Connection Open once established (QUSER/QSQSRVR server job) for performance. Keep-alive timeout controlled in setings.js - db2foriKeepAliveTimout (Default 30 minutes)  </p>
     </script>
 
 <script type="text/javascript">
@@ -89,3 +94,4 @@
         }
     });
 </script>
+

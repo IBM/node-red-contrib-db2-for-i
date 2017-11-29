@@ -29,73 +29,40 @@
                 node.emit("state","connecting");
                 node.conn = {};
                 this.dbconn = new db.dbconn();
-                node.connection = {
-                    connect: (cb) => {
-                        
-                         // Connection to the DB. will be reused by other nodes if needed 
+                     // Connection to the DB. will be reused by other nodes if needed 
                       if ( (node.credentials.user == null  &&  node.credentials.password == null) || (node.credentials.user == ''  &&  node.credentials.password == '')  )
                            {
                              this.dbconn.conn(node.dbname);
-                             console.log("No user/password specified: Connecting with current user profile" );  
+                             //console.log("No user/password specified: Connecting with current user profile" );  
                            }
                         else{
                             this.dbconn.conn(node.dbname, node.credentials.user, node.credentials.password); 
-                            console.log("Connecting with specified user profile" );  
+                            //console.log("Connecting with specified user profile" );  
                         }
-                        
-                      cb(null, this.dbconn);    
-                    },
-                    end: (conn) => {
-                        //console.log("deleting connection" );
-                        delete node.dbconn;
-                        //console.log('connection closed');
-                      
-                    }
-                };
-                node.connection.connect(function(err, conn) {
-
-                    
-                    node.connecting = false;
-                    if (err) {
-                        node.error(err);
-                        console.log("connection error " + err);
-                        
-                    } else {
-                        node.dbconn = conn;
+                        node.dbconn = this.dbconn;
                         node.connected = true;
-                        
-                    }
-                    conncb(err);
-                    
-                    node.connectionTime = new Date().getTime();
-                    //console.log("connectionTime== " + node.connectionTime+" with "+node.dbconn);
-                });
+                        node.connectionTime = new Date().getTime();
+                        //console.log("connectionTime== " + node.connectionTime+" with "+this.dbconn);
+             
             }
 
             
                 
             
             this.connect = function() {
-                return new Promise((resolve, reject) => {
-                    
-                  //  if (!this.connected && !this.connecting) {
-                  
-                        doConnect((err)=>{
-                            if(err) reject(err);
-                            else resolve();
-                        });
-                 /*   }  
-                    else{
-                        resolve();
-                    }  */
-                });
-            }
+                            
+                        doConnect();
+                                  
+                    }
             
               
             
             this.on('close', function (done) {
                 if (this.connection) {
-                    node.connection.end(this.dbconn);
+                    //node.connection.end(this.dbconn);
+                     this.dbconn.close();
+                      this.dbconn.disconn();
+                    delete this.dbconn;
                 } 
                 done();
             });
@@ -113,7 +80,7 @@
             RED.nodes.createNode(this,n);
             this.mydb = n.mydb;
             this.arraymode = n.arraymode;
-            //this.keepalivemode= n.nopoolmode;
+            
             var node = this;
             
             
@@ -122,12 +89,12 @@
     
                 if ( msg.payload !== null && typeof msg.payload === 'string' && msg.payload !== '') {
                     
-                    //console.log("Processing SQL Query with "+ db2.dbconn+ " "+msg.payload);
+                    console.log("Processing SQL Query with "+ db2.dbconn+ " "+msg.payload);
                     try{
-                        var sqlB = new db.dbstmt(db2.dbconn);
+                       var sqlB = new db.dbstmt(db2.dbconn);
                    
                         
-                    sqlB.exec(msg.payload, function(rows) {
+                    sqlB.execSync(msg.payload, function(rows) {
                         
                         
                           
@@ -149,16 +116,21 @@
                  
                         }
                             
-                        node.send([ null, { topic: msg.topic, control: 'end' }]);
-                        
+                        //node.send([ null, { topic: msg.topic, control: 'end' }]);
+                      
                     });
-                    delete sqlB;
+                      
+                    
+                      sqlB.close();    
+                      delete sqlB;
                    
                      var time = new Date().getTime();  
                         
                     if (!db2.keepalive || ( time-db2.connectionTime >= db2foriKeepAliveTimout )  ){   // 60 secondes
                                 
-                            //db2.dbconn.disconn(); // bug with disconn(), close() API error. To be fixed for QUSER/QSQSRVR jobs cleanup
+                            //console.log("Disconnecting...(keepalive="+db2.keepalive+")");
+                            db2.dbconn.close();
+                            db2.dbconn.disconn(); // bug with disconn(), close() API error. To be fixed for QUSER/QSQSRVR jobs cleanup
                             delete db2.dbconn;
                             db2.dbconn=null;
                          
@@ -238,14 +210,13 @@
                         // if a connection - or config node - to this particular does not exist: get the appropriate config node & Get a connection with connect() 
                         // if a config node does not exist for this system and database, fails.
                         else{
-                            //console.log("connection!");   
-                            //we found the config node whose dbname equals the injected input msg.database payload. let's connect for the first time, we'll reuse it. 
+                           //we found the config node whose dbname equals the injected input msg.database payload. let's connect for the first time, we'll reuse it. 
                             findNode.connect();
-                           
+                                //console.log("Connected");
                                 this.status({fill:"green",shape:"dot",text:"connected"});
                                 // we are connected, let's query our database using the DB2 API exec() 
                                 node.query(node, findNode, msg);
-                                               } 
+                             } 
                             }
                         
                     }

@@ -89,7 +89,7 @@
     
                 if ( msg.payload !== null && typeof msg.payload === 'string' && msg.payload !== '') {
                     
-                    console.log("Processing SQL Query with "+ db2.dbconn+ " "+msg.payload);
+                    //console.log("Processing SQL Query with "+ db2.dbconn+ " "+msg.payload);
                     try{
                        var sqlB = new db.dbstmt(db2.dbconn);
                    
@@ -120,8 +120,19 @@
                       
                     });
                       
+                      }
+                     
+                    catch(e)
+                        {
+                             console.log("Error or Warning while executing a DB statement: exec() "+e.message);
+                             node.error("Error or Warning while executing a DB statement: exec() "+e.message);
+                             //db2.dbconn=null;
+                            
+                        } 
                     
-                      sqlB.close();    
+                      if (sqlB) {
+                          sqlB.close();   
+                      } 
                       delete sqlB;
                    
                      var time = new Date().getTime();  
@@ -137,15 +148,15 @@
                                                      
                         }
                         time=null;
-                    }
+                /*    }
                      
                     catch(e)
                         {
                              console.log("Error while executing a DB statement...");
                              node.error("Error while executing a DB statement...");
-                             db2.dbconn=null;
+                             //db2.dbconn=null;
                             
-                        }
+                        }  */
                     }
                 else {
                     if (msg.payload === null) { 

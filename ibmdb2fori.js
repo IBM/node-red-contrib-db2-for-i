@@ -1,11 +1,14 @@
     module.exports = function(RED) {    
         //"use strict"; 
-        
-        var Promise = require('promise');
+        // Promise was used in node-red-contrib-db2fori version <= 0.1.4
+        //####var Promise = require('promise');
         // Requires native DB2 driver - non blocking version : Node-RED flow has to run locally on IBM i, for now. JDBC/ODBC driver use to come.
         // Hardcoded path..todo: make it more flexible
-        var db = require('/QOpenSys/QIBM/ProdData/OPS/Node6/os400/db2i/lib/db2a');
-        
+        // This was valid for in node-red-contrib-db2fori version <= 0.1.4 which uses 5733OPS - 0.1.5 uses the npm way and Node v8+ 
+        //####new in version 0.1.5 var db = require('/QOpenSys/QIBM/ProdData/OPS/Node6/os400/db2i/lib/db2a');
+        //####use of idb-connector instead. Thanks to @ibmrcruicks 
+        var db = require('idb-connector');
+	 
         // Keep-Alive timeout of reconnect time. Keeping a connection for performance. If keepAlive=false, connect-query-disconnect mode. 
         var db2foriKeepAliveTimout = RED.settings.db2foriKeepAliveTimout || 1800000;  //default: 30 minutes
          

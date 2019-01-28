@@ -12,8 +12,11 @@ Run the following command in your Node-RED user directory - typically `~/.node-r
 
 Prereqs
 -------
+- If you use 5733OPS and Node version <=6 :
 5733OPS Open Source free products with options for Node.js and Db2 for i driver located in /QOpenSys/QIBM/ProdData/OPS/Node6/os400/db2i/lib/db2a (default)
-
+- If you use the latest package version : 
+Since node-red-contrib-db2-for-i version >= 0.1.5, 5733OPS is not used anymore (deprecated): the prereq is to install the Node.js iDB Connector idb-connector (done automatically when installing this package if not already present)
+  
 
 Usage
 -----

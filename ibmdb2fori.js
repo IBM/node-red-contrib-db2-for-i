@@ -63,8 +63,10 @@
             this.on('close', function (done) {
                 if (this.connection) {
                     //node.connection.end(this.dbconn);
-                     this.dbconn.close();
+                      //before  0.1.5 : this.dbconn.close();
                       this.dbconn.disconn();
+                      //after 0.1.5 
+                      this.dbconn.close();  
                     delete this.dbconn;
                 } 
                 done();
@@ -143,8 +145,12 @@
                     if (!db2.keepalive || ( time-db2.connectionTime >= db2foriKeepAliveTimout )  ){   // 60 secondes
                                 
                             //console.log("Disconnecting...(keepalive="+db2.keepalive+")");
-                            db2.dbconn.close();
+                            // before version 0.1.5 
+			        //db2.dbconn.close();
                             db2.dbconn.disconn(); // bug with disconn(), close() API error. To be fixed for QUSER/QSQSRVR jobs cleanup
+                            // after version 0.1.5
+		            db2.dbconn.close();	  
+                            
                             delete db2.dbconn;
                             db2.dbconn=null;
                          

@@ -12,11 +12,13 @@ Run the following command in your Node-RED user directory - typically `~/.node-r
 
 Prereqs
 -------
-- If you use 5733OPS and Node version <=6 :
-5733OPS Open Source free products with options for Node.js and Db2 for i driver located in /QOpenSys/QIBM/ProdData/OPS/Node6/os400/db2i/lib/db2a (default)
-- If you use the latest package version : 
-Since node-red-contrib-db2-for-i version >= 0.1.5, 5733OPS is not used anymore (deprecated): the prereq is to install the Node.js iDB Connector idb-connector (done automatically when installing this package if not already present)
-  
+- If you use the latest package version (>=0.1.5)  :
+5733OPS is not used anymore (Deprecated): the prereq is to install the Node.js iDB Connector idb-connector (done automatically when installing this package if no
+t already present) with Node.js (version 8 and later) using a yum install.
+
+- If you use 5733OPS and Node version <=6 (Deprecated), you need to install version 0.1.4 of this package using the following command:  
+    npm install node-red-contrib-db2-for-i@0.1.4
+5733OPS has to be installed with appropriate options for Node.js v6 and Db2 for i driver located in /QOpenSys/QIBM/ProdData/OPS/Node6/os400/db2i/lib/db2a (default)
 
 Usage
 -----
@@ -31,8 +33,9 @@ NEW -  A more standard "Single Array Mode":  result payload is an array containi
 
 If nothing is found then null is returned.
 
-Basic Example [here](https://flows.nodered.org/flow/b255f32b8e07a5cc0c17e654fd338354)  or [here](https://flows.nodered.org) - "db2" search to get an up to date example
+A complete tutorial is available on the [IBM Cloud and Watson Day Web Site] (https://ibmcloud-watson-day.mybluemix.net/files/Lab.Node-RED-SocialDashboard.pdf)
 
+Basic Example [here](https://flows.nodered.org/flow/b255f32b8e07a5cc0c17e654fd338354)  or [here](https://flows.nodered.org) - "db2" search to get an up to date example
 
 Usage Details and Example
 --------
@@ -57,4 +60,6 @@ Getting Started
 
 Refer to the flow [here](https://flows.nodered.org/flow/b255f32b8e07a5cc0c17e654fd338354)  or [here](https://flows.nodered.org) - "db2" search to get an up to date example
     
+A complete tutorial is available on the [IBM Cloud and Watson Day Web Site] (https://ibmcloud-watson-day.mybluemix.net/files/Lab.Node-RED-SocialDashboard.pdf)
 
+Get Started with Node-RED and Watson [here] (https://ibmcloud-watson-day.mybluemix.net) and install Node-RED on IBM i using this [tutorial] (https://developer.ibm.com/tutorials/i-running-node-red) 

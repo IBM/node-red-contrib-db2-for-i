@@ -124,7 +124,11 @@
                         //node.send([ null, { topic: msg.topic, control: 'end' }]);
                       
                     });
-                      
+                      if (sqlB) {
+                          sqlB.close();
+                      }
+                      delete sqlB;
+ 
                       }
                      
                     catch(e)
@@ -202,7 +206,7 @@
                        if(node.cnnname && node.cnnname === msg.database){
                                       findNode = RED.nodes.getNode(node.id);
                                       node.mydb = node.id;
-                                      console.log("Connection name specified in msg.database. Connection using Db2 Config node : "+ node.cnnname);
+                                     // console.log("Connection name specified in msg.database. Connection using Db2 Config node : "+ node.cnnname);
                                 }
                             })
                       
@@ -217,13 +221,13 @@
                         if (findNode == null)
                                 { 
                                   findNode = RED.nodes.getNode(n.mydb);
-                                     console.log("Simple Mode. Connection using Db2 Config node : "+ findNode.cnnname );
+                                     //console.log("Simple Mode. Connection using Db2 Config node : "+ findNode.cnnname );
                                      //console.log("Simple Mode. Connection status: " + findNode.dbconn);
                                 }
                                                 
                         
                         if( findNode.dbconn && ( findNode.cnnname === msg.database || msg.database =="simple-mode")) {
-                            console.log("Already connected to DB2 for i with this connection");
+                            //console.log("Already connected to DB2 for i with this connection");
                             node.query(node, findNode, msg);
                                                      
                         }

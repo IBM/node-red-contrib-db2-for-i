@@ -99,12 +99,15 @@
                        var sqlB = new db.dbstmt(db2.dbconn);
                    
                         
-                    sqlB.execSync(msg.payload, function(rows) {
+                    // sqlB.execSync(msg.payload, function(rows) {
+                    sqlB.execSync(msg.payload, function(rows, error) { // 20200204/NEDI: "error" added for retrieving errors from SQL-processor
                         
-                        
+						if (error) { throw(error) } // 20200204/NEDI: "error" added for retrieving errors from SQL-processor
+
                           
                     if (!node.arraymode)        
                         {   
+							if (rows == null) { rows = []}; // 20200204/NEDI: added for error while using for INSERT
                             rows = rows.length==0?[""]:rows; //issue 0.1.1 - if rows is empty, return an empty row
                             rows.forEach(function(row) {
                                 
@@ -124,17 +127,14 @@
                         //node.send([ null, { topic: msg.topic, control: 'end' }]);
                       
                     });
-                      if (sqlB) {
-                          sqlB.close();
-                      }
-                      delete sqlB;
- 
+                      
                       }
                      
                     catch(e)
                         {
+							 msg.payload=e.message; // 20200204/NEDI: added for error handling
                              console.log("Error or Warning while executing a DB statement: exec() "+e.message);
-                             node.error("Error or Warning while executing a DB statement: exec() "+e.message);
+                             node.error("Error or Warning while executing a DB statement: exec() "+e.message, msg); // 20200204/NEDI: inserted ", msg" for error handling
                              //db2.dbconn=null;
                             
                         } 
@@ -206,7 +206,7 @@
                        if(node.cnnname && node.cnnname === msg.database){
                                       findNode = RED.nodes.getNode(node.id);
                                       node.mydb = node.id;
-                                     // console.log("Connection name specified in msg.database. Connection using Db2 Config node : "+ node.cnnname);
+                                      console.log("Connection name specified in msg.database. Connection using Db2 Config node : "+ node.cnnname);
                                 }
                             })
                       
@@ -221,13 +221,13 @@
                         if (findNode == null)
                                 { 
                                   findNode = RED.nodes.getNode(n.mydb);
-                                     //console.log("Simple Mode. Connection using Db2 Config node : "+ findNode.cnnname );
+                                     console.log("Simple Mode. Connection using Db2 Config node : "+ findNode.cnnname );
                                      //console.log("Simple Mode. Connection status: " + findNode.dbconn);
                                 }
                                                 
                         
                         if( findNode.dbconn && ( findNode.cnnname === msg.database || msg.database =="simple-mode")) {
-                            //console.log("Already connected to DB2 for i with this connection");
+                            console.log("Already connected to DB2 for i with this connection");
                             node.query(node, findNode, msg);
                                                      
                         }
@@ -253,4 +253,3 @@
         }
         RED.nodes.registerType("DB2 for i", ibmdb2foriNodeIn);
     }
-

@@ -41,7 +41,7 @@ A complete tutorial is available on the [IBM Cloud and Watson Day Web Site](http
 
 Basic Example [here](https://flows.nodered.org/flow/b255f32b8e07a5cc0c17e654fd338354)  or [here](https://flows.nodered.org) - "db2" search to get an up to date example
 
-Create a set of CRUD Web Service (RESTful)  from a Db2 table in a few minutes using this [flow](https://flows.nodered.org/flow/f50b02fb34d3e5fd58cfa271f0c1cdc8) 
+Create a set of (CRUD) Web Services (RESTful)  from a Db2 table in a few minutes using this [flow](https://flows.nodered.org/flow/f50b02fb34d3e5fd58cfa271f0c1cdc8) 
 
 Usage Details and Example
 --------

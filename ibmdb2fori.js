@@ -1,4 +1,20 @@
-    module.exports = function(RED) {    
+/**
+ * Copyright 2017 IBM Corp.
+ *
+ * Licensed under the Apache License, Version 2.0 (the 'License');
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an 'AS IS' BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ **/   
+
+ module.exports = function(RED) {    
         //"use strict"; 
         // Promise was used in node-red-contrib-db2fori version <= 0.1.4
         //####var Promise = require('promise');
@@ -8,7 +24,7 @@
         //####new in version 0.1.5 var db = require('/QOpenSys/QIBM/ProdData/OPS/Node6/os400/db2i/lib/db2a');
         //####use of idb-connector instead. Thanks to @ibmrcruicks 
         var db = require('idb-connector');
-	 
+	//var odbc = require('odbc'); 
         // Keep-Alive timeout of reconnect time. Keeping a connection for performance. If keepAlive=false, connect-query-disconnect mode. 
         var db2foriKeepAliveTimout = RED.settings.db2foriKeepAliveTimout || 1800000;  //default: 30 minutes
          
@@ -21,11 +37,8 @@
             this.dbconn=n.dbconn;
             this.connectionTime = 0;
             this.keepalive=n.keepalive;
-            
             var node = this;
-            
-            
-            
+                      
             function doConnect(conncb) {
                 node.connecting = true;
                 
@@ -64,10 +77,11 @@
                 if (this.connection) {
                     //node.connection.end(this.dbconn);
                       //before  0.1.5 : this.dbconn.close();
-                      this.dbconn.disconn();
+                  this.dbconn.disconn();
                       //after 0.1.5 
-                      this.dbconn.close();  
-                    delete this.dbconn;
+                  this.dbconn.close();  
+                  delete this.dbconn;
+
                 } 
                 done();
             });
@@ -85,13 +99,14 @@
             RED.nodes.createNode(this,n);
             this.mydb = n.mydb;
             this.arraymode = n.arraymode;
-            
             var node = this;
-            
+            this.status({fill:"red",shape:"ring",text:"disconnected"});
             
             node.query = function(node, db2, msg){
-                
-    
+               
+		// status below never displayed - synchronous task vs rendering...need to dig futher     
+                this.status({fill:"blue",shape:"dot",text:"processing..."});
+
                 if ( msg.payload !== null && typeof msg.payload === 'string' && msg.payload !== '') {
                     
                     //console.log("Processing SQL Query with "+ db2.dbconn+ " "+msg.payload);
@@ -107,7 +122,7 @@
                           
                     if (!node.arraymode)        
                         {   
-							if (rows == null) { rows = []}; // 20200204/NEDI: added for error while using for INSERT
+			if (rows == null) { rows = []}; // 20200204/NEDI: added for error while using for INSERT
                             rows = rows.length==0?[""]:rows; //issue 0.1.1 - if rows is empty, return an empty row
                             rows.forEach(function(row) {
                                 
@@ -143,21 +158,24 @@
                           sqlB.close();   
                       } 
                       delete sqlB;
-                   
+
+	             // the node is connected, let's display its status 		
+                     this.status({fill:"green",shape:"dot",text:"connected "+ db2.cnnname});
+                     
+	             // do we need to close the connection after this latest query (keepalive off or max time reached)? 
+		// if so , close the connection, and update the node status with a specific 'green disconnected' status 		
                      var time = new Date().getTime();  
-                        
                     if (!db2.keepalive || ( time-db2.connectionTime >= db2foriKeepAliveTimout )  ){   // 60 secondes
                                 
-                            //console.log("Disconnecting...(keepalive="+db2.keepalive+")");
                             // before version 0.1.5 
-			        //db2.dbconn.close();
+			    //db2.dbconn.close();
                             db2.dbconn.disconn(); // bug with disconn(), close() API error. To be fixed for QUSER/QSQSRVR jobs cleanup
                             // after version 0.1.5
 		            db2.dbconn.close();	  
-                            
                             delete db2.dbconn;
                             db2.dbconn=null;
-                         
+                            //console.log("Disconnection forced: "+db2.cnnname+" elapsed time:"+ (time-db2.connectionTime)/1000 + "- timeout: "+db2foriKeepAliveTimout/1000+" seconds"  );
+			    node.status({fill:"green",shape:"ring",text:"disconnected "+ db2.cnnname});
                                                      
                         }
                         time=null;
@@ -184,9 +202,9 @@
                 }
                     
             }
+            //node.on("input", (msg) => {
+              this.on('input', function(msg){ 
 
-            node.on("input", (msg) => {
-                
                 if ( msg.database == null ) {
                      // Simple mode - when you don't specify a connection name dynamically in msg.database - use the one in the Db2 for i config node attached.
                     msg.database ="simple-mode";          
@@ -196,7 +214,7 @@
                     
                     //if a node config already there
                     if (node.mydbNode) {
-                        
+
                        node.send([ null, { control: 'start', query: msg.payload, database: n.mydb } ]);
                         // if a connection already exists to this particular "database". for connection reuse. not pooling yet :)
                         
@@ -213,7 +231,7 @@
                         if (findNode == null && msg.database!=null && msg.database !="simple-mode")
                                 {
                                     console.log("msg.database is not matching any Connection Name in a DB2 for i config node");  
-                                    this.error("msg.database is not matching any Connection Name in a Db2 for i config node");
+                                    node.error("msg.database is not matching any Connection Name in a Db2 for i config node");
                                     this.status({fill:"red",shape:"ring",text:"disconnected"});
                                 }
                         else
@@ -221,25 +239,21 @@
                         if (findNode == null)
                                 { 
                                   findNode = RED.nodes.getNode(n.mydb);
-                                     console.log("Simple Mode. Connection using Db2 Config node : "+ findNode.cnnname );
-                                     //console.log("Simple Mode. Connection status: " + findNode.dbconn);
+                                   //console.log("Simple Mode. Connection using Db2 Config node : "+ findNode.cnnname );
                                 }
                                                 
                         
                         if( findNode.dbconn && ( findNode.cnnname === msg.database || msg.database =="simple-mode")) {
-                            console.log("Already connected to DB2 for i with this connection");
-                            node.query(node, findNode, msg);
-                                                     
+                            console.log("Already connected to DB2 for i with this connection : "+ findNode.cnnname);
+			    node.query(node, findNode, msg);
                         }
                         // if a connection - or config node - to this particular does not exist: get the appropriate config node & Get a connection with connect() 
                         // if a config node does not exist for this system and database, fails.
                         else{
                            //we found the config node whose dbname equals the injected input msg.database payload. let's connect for the first time, we'll reuse it. 
                             findNode.connect();
-                                //console.log("Connected");
-                                this.status({fill:"green",shape:"dot",text:"connected"});
-                                // we are connected, let's query our database using the DB2 API exec() 
-                                node.query(node, findNode, msg);
+                           // we are connected, let's query our database using the DB2 API exec() 
+			    node.query(node, findNode, msg);
                              } 
                             }
                         

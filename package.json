@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-db2-for-i",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "description": "A Node-RED node to access a IBM Db2 for i database",
   "dependencies": {
     "idb-connector": "^1.1.8"
@@ -21,7 +21,7 @@
     "name": "Benoit Marolleau"
   },
   "license": "Apache-2.0",
-  "homepage": "https://git.ng.bluemix.net/benoit.marolleau/node-red-contrib-db2-for-i.git",
+  "homepage": "https://github.com/IBM/node-red-contrib-db2-for-i",
   "node-red": {
     "nodes": {
       "db2fori": "ibmdb2fori.js"
@@ -35,10 +35,10 @@
   "main": "ibmdb2fori.js",
   "repository": {
     "type": "git",
-    "url": "git+https://git.ng.bluemix.net/benoit.marolleau/node-red-contrib-db2-for-i.git"
+    "url": "https://github.com/IBM/node-red-contrib-db2-for-i"
   },
   "bugs": {
-    "url": "https://git.ng.bluemix.net/benoit.marolleau/node-red-contrib-db2-for-i.git/issues"
+    "url": "https://github.com/IBM/node-red-contrib-db2-for-i.git/issues"
   },
   "maintainers": [
     {

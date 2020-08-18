@@ -49,16 +49,16 @@
                       if ( (node.credentials.user == null  &&  node.credentials.password == null) || (node.credentials.user == ''  &&  node.credentials.password == '')  )
                            {
                              this.dbconn.conn(node.dbname);
-                             //console.log("No user/password specified: Connecting with current user profile" );  
+                             node.debug("No user/password specified: Connecting with current user profile" );  
                            }
                         else{
                             this.dbconn.conn(node.dbname, node.credentials.user, node.credentials.password); 
-                            //console.log("Connecting with specified user profile" );  
+                            node.debug("Connecting with specified user profile" );  
                         }
                         node.dbconn = this.dbconn;
                         node.connected = true;
                         node.connectionTime = new Date().getTime();
-                        //console.log("connectionTime== " + node.connectionTime+" with "+this.dbconn);
+                        node.trace("connectionTime== " + node.connectionTime+" with "+this.dbconn);
              
             }
 
@@ -109,7 +109,7 @@
 
                 if ( msg.payload !== null && typeof msg.payload === 'string' && msg.payload !== '') {
                     
-                    //console.log("Processing SQL Query with "+ db2.dbconn+ " "+msg.payload);
+                    //node.debug("Processing SQL Query with "+ db2.dbconn+ " "+msg.payload);
                     try{
                        var sqlB = new db.dbstmt(db2.dbconn);
                    
@@ -148,7 +148,7 @@
                     catch(e)
                         {
 							 msg.payload=e.message; // 20200204/NEDI: added for error handling
-                             console.log("Error or Warning while executing a DB statement: exec() "+e.message);
+                             node.debug("Error or Warning while executing a DB statement: exec() "+e.message);
                              node.error("Error or Warning while executing a DB statement: exec() "+e.message, msg); // 20200204/NEDI: inserted ", msg" for error handling
                              //db2.dbconn=null;
                             
@@ -174,7 +174,7 @@
 		            db2.dbconn.close();	  
                             delete db2.dbconn;
                             db2.dbconn=null;
-                            //console.log("Disconnection forced: "+db2.cnnname+" elapsed time:"+ (time-db2.connectionTime)/1000 + "- timeout: "+db2foriKeepAliveTimout/1000+" seconds"  );
+                            //node.debug("Disconnection forced: "+db2.cnnname+" elapsed time:"+ (time-db2.connectionTime)/1000 + "- timeout: "+db2foriKeepAliveTimout/1000+" seconds"  );
 			    node.status({fill:"green",shape:"ring",text:"disconnected "+ db2.cnnname});
                                                      
                         }
@@ -183,7 +183,7 @@
                      
                     catch(e)
                         {
-                             console.log("Error while executing a DB statement...");
+                             node.debug("Error while executing a DB statement...");
                              node.error("Error while executing a DB statement...");
                              //db2.dbconn=null;
                             
@@ -224,13 +224,12 @@
                        if(node.cnnname && node.cnnname === msg.database){
                                       findNode = RED.nodes.getNode(node.id);
                                       node.mydb = node.id;
-                                      console.log("Connection name specified in msg.database. Connection using Db2 Config node : "+ node.cnnname);
+                                      node.debug("Connection name specified in msg.database. Connection using Db2 Config node : "+ node.cnnname);
                                 }
                             })
                       
                         if (findNode == null && msg.database!=null && msg.database !="simple-mode")
                                 {
-                                    console.log("msg.database is not matching any Connection Name in a DB2 for i config node");  
                                     node.error("msg.database is not matching any Connection Name in a Db2 for i config node");
                                     this.status({fill:"red",shape:"ring",text:"disconnected"});
                                 }
@@ -239,12 +238,12 @@
                         if (findNode == null)
                                 { 
                                   findNode = RED.nodes.getNode(n.mydb);
-                                   //console.log("Simple Mode. Connection using Db2 Config node : "+ findNode.cnnname );
+                                   node.debug("Simple Mode. Connection using Db2 Config node : "+ findNode.cnnname );
                                 }
                                                 
                         
                         if( findNode.dbconn && ( findNode.cnnname === msg.database || msg.database =="simple-mode")) {
-                            console.log("Already connected to DB2 for i with this connection : "+ findNode.cnnname);
+                            node.debug("Already connected to DB2 for i with this connection : "+ findNode.cnnname);
 			    node.query(node, findNode, msg);
                         }
                         // if a connection - or config node - to this particular does not exist: get the appropriate config node & Get a connection with connect() 

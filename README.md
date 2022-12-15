@@ -1,4 +1,6 @@
 # node-red-contrib-db2-for-i
+![Platform Node-RED](https://img.shields.io/badge/Platform-Node--RED-red.png)
+[![NPM download](https://img.shields.io/npm/dt/node-red-contrib-db2-for-i.svg)](https://npm-stat.com/charts.html?package=node-red-contrib-db2-for-i&from=2017-07-01&to=2022-12-14)
 
 A <a href="http://nodered.org" target="_new">Node-RED</a> node to read and write to a Db2 for i database from Node-RED on IBM i.
 
@@ -22,7 +24,7 @@ As a NPM dependency, this driver should be automatically installed when installi
  ```bash
     npm install idb-connector
  ```
-NB: This node has to run on Node.js / Node-RED on IBM i (Native driver), an ODBC alternative is in the plan for more portability.
+NB: This node has to run on Node.js / Node-RED on IBM i (Native driver). For accessing IBM i from Node-RED running outside IBM i, the alternative is to use this [ODBC node](https://www.npmjs.com/package/node-red-contrib-odbc).
 
 Usage
 -----
@@ -33,8 +35,8 @@ Allows basic access to a Db2 for i database. Supported queries: SQL SELECT, INSE
 -  the result is returned in `msg.payload`.
 
 2 modes for the returned payload : 
--  one row per result message (Default). Useful for processing a row at a time in a Node-RED flow. 
--  Standard "Single Array Mode":  result payload is an array containing all the result rows. Useful for bulk processing.
+-  one row per result message (Default). For processing a row at a time in a Node-RED flow. 
+-  Standard "Single Array Mode":  result payload is an array containing all the result rows. 
 
 If nothing is found then null is returned.
 
@@ -110,7 +112,7 @@ node-red-project@0.0.1 /home/<USER>/.node-red
 bash-5.1$ cd /QOpenSys/pkgs/lib/nodejs16/lib/node_modules/node-red/
 bash-5.1$ node  red.js 
 ``` 
-**5) Optional – node-red background process**
+**5) Optional – Run Node-red as a background process**
 ```bash 
 bash-5.1$ ln -s /QOpenSys/pkgs/lib/nodejs16/lib/node_modules/node-red/bin/node-red-pi /usr/bin/node-red 
 bash-5.1$ node-red 

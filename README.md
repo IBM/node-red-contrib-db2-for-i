@@ -35,8 +35,8 @@ Allows basic access to a Db2 for i database. Supported queries: SQL SELECT, INSE
 -  the result is returned in `msg.payload`.
 
 2 modes for the returned payload : 
--  one row per result message (Default). For processing a row at a time in a Node-RED flow. 
--  Standard "Single Array Mode":  result payload is an array containing all the result rows. 
+-  one row per result message (Default): For processing a row at a time in a Node-RED flow. 
+-  Standard "Single Array Mode" (Recommended):  result payload is an array containing all the result rows. 
 
 If nothing is found then null is returned.
 

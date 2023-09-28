@@ -123,15 +123,18 @@
                     if (!node.arraymode)        
                         {   
 			if (rows == null) { rows = []}; // 20200204/NEDI: added for error while using for INSERT
-                            rows = rows.length==0?[""]:rows; //issue 0.1.1 - if rows is empty, return an empty row
-                            rows.forEach(function(row) {
-                                
-                                msg.payload=row;
-                                node.send(msg);
-                                // bug - erase msg content corrected 0.0.9 - node.send({ topic: msg.topic, payload: row } );
-                                
+                        rows = rows.length==0?[""]:rows; //issue 0.1.1 - if rows is empty, return an empty row
+                        rows.forEach(function(row) {
+                            // bug solved - erase msg content corrected 0.0.9 - node.send({ topic: msg.topic, payload: row } );
+                            // bug in multi-result mode (deprecated but still functional) that returns always the last record as send in Async. 
+                            // and send the same last values. Need to clone the message and work on a copy.Any better idea is welcome, but that works.
+                            // Refer to discussion https://github.com/node-red/node-red/issues/1214
+                            var newMessage = RED.util.cloneMessage(msg);
+                             newMessage.payload=row;
+                             node.send(newMessage);     
                             })
                         }
+                       
                         else
                         {
                             msg.payload=rows;

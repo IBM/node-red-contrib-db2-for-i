@@ -70,7 +70,7 @@
 <li> Input:   <code>msg.payload</code>  = SQL Query  </li>
 <li> Optional Input: <code>msg.database</code> payload for injecting the db connection name (ex: Connection1) which has to exist as a DB2 for i config node. This connection name has to be : The  associated DB2 config node name is used as a connection name for connection reuse within a Node-RED flow. Useful for dynamic connection selection (Named Connection Pool like) </li>
 <li> DB2 for i Config Node Input : Enter your credentials. Example:  dbname = *LOCAL ,  Optional : user profile and password if different from current profile</li>
-<li>Output: Result in <code>msg.payload</code>. One message / JSON Array (array mode) containing N objects (rows) or N message / JSON object per row. No DB2 return code for now...</li></p>
+<li>Output: Result in <code>msg.payload</code>. One message / JSON Array (array mode) containing N objects (rows) or N message / JSON object per row (not recommended). No DB2 return code for now...</li></p>
  <p> Keep-Alive mode: keep the DB Connection Open once established (QUSER/QSQSRVR server job) for performance. Keep-alive timeout controlled in setings.js - db2foriKeepAliveTimout (Default 30 minutes)  </p>
  <p> ***New in version 0.1.5+: uses the npm installation process and not the 5733OPS and PTF process anymore, requires the Node.js iDB Connector (/QOpenSys/pkgs/bin/npm install idb-connector). Testing with node v8.  If you want 5733OPS and Node v6, please use version 0.1.4 (npm install node-red-contrib-db2-for-i@0.1.4) instead.   
 </p>  

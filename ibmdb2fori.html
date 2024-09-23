@@ -19,6 +19,10 @@
         <label for="node-config-input-keepalive"><i class="fa fa-keepalive"></i> Keep-Alive</label>
         <input type="checkbox" id="node-config-input-keepalive" style="display:inline-block; width:20px; vertical-align:baseline;">
     </div>
+     <div class="form-row">
+        <label for="node-config-input-attributes"><i class="fa fa-attributes"></i> Connection Attributes (json array)</label>
+        <input type="text" id="node-config-input-attributes" placeholder='[{"id": 10003, "value": 1 },{"id": 0, "value": 1 }, {"id":10027,"value":0} ]'>
+    </div>
   
 </script>
 
@@ -28,7 +32,8 @@
         defaults: {
            cnnname: {value:"", required:true},
            db: {value:"*LOCAL",required:true},
-           keepalive:{value: true}
+           keepalive:{value: true},
+           attributes: {value:"", required:false}
         },
         credentials: {
             user: {type: "text"},
@@ -73,7 +78,8 @@
 <li>Output: Result in <code>msg.payload</code>. One message / JSON Array (array mode) containing N objects (rows) or N message / JSON object per row (not recommended). No DB2 return code for now...</li></p>
  <p> Keep-Alive mode: keep the DB Connection Open once established (QUSER/QSQSRVR server job) for performance. Keep-alive timeout controlled in setings.js - db2foriKeepAliveTimout (Default 30 minutes)  </p>
  <p> ***New in version 0.1.5+: uses the npm installation process and not the 5733OPS and PTF process anymore, requires the Node.js iDB Connector (/QOpenSys/pkgs/bin/npm install idb-connector). Testing with node v8.  If you want 5733OPS and Node v6, please use version 0.1.4 (npm install node-red-contrib-db2-for-i@0.1.4) instead.   
-</p>  
+</p> 
+<p> ***New Beta** Query Attributes in JSON Array format. Please refer to https://www.ibm.com/docs/en/i/7.5?topic=functions-sqlsetconnectattr-set-connection-attribute and https://github.com/IBM/nodejs-idb-connector/blob/master/lib/db2a.js </p>
  </script>
 
 <script type="text/javascript">
@@ -96,4 +102,3 @@
         }
     });
 </script>
-

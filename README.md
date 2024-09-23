@@ -40,6 +40,8 @@ Allows basic access to a Db2 for i database. Supported queries: SQL SELECT, INSE
 
 If nothing is found then null is returned.
 
+Optionally, you can now set connection attributes in JSON Array format. `[{"id": integerID, "value": integerValue}, {...}]`. Please refer to the [IBM i infocenter](https://www.ibm.com/docs/en/i/7.5?topic=functions-sqlsetconnectattr-set-connection-attribute) and the attribute IDs listed in the [idb-connector documentation](https://github.com/IBM/nodejs-idb-connector/blob/master/lib/db2a.js)
+
 Examples
 -----
 - Refer to the [IBMi-OSS-Examples git page](https://github.com/IBM/ibmi-oss-examples/tree/master/nodejs/node-red)
@@ -126,6 +128,7 @@ You need to install version 0.1.4 of this package using the following command:
     npm install node-red-contrib-db2-for-i@0.1.4
 	
 In that case, 5733OPS has to be installed with appropriate options for Node.js v6 and Db2 for i driver located in the default directory:  `/QOpenSys/QIBM/ProdData/OPS/Node6/os400/db2i/lib/db2a` 
+
 
 
 
